@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("start game");
         timer = timeLimit;
         gameRunning = true;
         currentState = GameState.InGame;
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
 
     void LoseGame()
     {
+        Debug.Log("lose game");
         gameRunning = false;
         currentState = GameState.LoseScreen;
         SwitchToCamera((int)currentState);
@@ -81,13 +83,15 @@ public class GameManager : MonoBehaviour
     }
     void WinGame()
     {
+        Debug.Log("win game");
         gameRunning = false;
         currentState = GameState.WinScreen;
         SwitchToCamera((int)currentState);
         // trigger win screen here
     }
-    void GoToMenu()
+    public void GoToMenu()
     {
+        Debug.Log("go to menu");
         gameRunning = false;
         currentState = GameState.StartMenu;
         SwitchToCamera((int)currentState);
