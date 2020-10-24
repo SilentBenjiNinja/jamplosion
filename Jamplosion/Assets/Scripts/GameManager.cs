@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum GameState
 {
@@ -30,10 +32,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public float timeLimit = 90f;
-    public float timer;
-
-    public int moduleAmount = 4;
+    float timer;
 
     public bool[] modulesFinished;
 
@@ -92,6 +91,8 @@ public class GameManager : MonoBehaviour
         gameRunning = false;
         currentState = GameState.StartMenu;
         SwitchToCamera((int)currentState);
+        startMenu.SetActive(true);
+        difficulty.SetActive(false);
     }
 
     // called from module
@@ -121,24 +122,72 @@ public class GameManager : MonoBehaviour
 
     // use these to adjust game settings (in menu?)
     #region Game Settings
-    public void SetModuleAmount(int _moduleAmount)
+    public float timeLimit = 90f;
+    public int moduleAmount = 4;
+
+    public float maxTimeLimit = 240f;
+    public float minTimeLimit = 15f;
+
+    public int maxModuleAmount = 8;
+    public int minModuleAmount = 1;
+
+    public GameObject startMenu;
+    public GameObject difficulty;
+
+    public TextMeshProUGUI txtModules;
+    public TextMeshProUGUI txtTime;
+
+    public void SelectDifficulty()
     {
-        if (!gameRunning)
+        startMenu.SetActive(false);
+        difficulty.SetActive(true);
+    }
+
+    public void RaiseTime()
+    {
+        if (timeLimit < maxTimeLimit)
         {
-            moduleAmount = _moduleAmount;
+            timeLimit += 5f;
+            UpdateTimeSelection();
         }
     }
-    public void SetTime(float _timeLimit)
+    public void DecreaseTime()
     {
-        if (!gameRunning)
+        if (timeLimit > minTimeLimit)
         {
-            timeLimit = _timeLimit;
+            timeLimit -= 5f;
+            UpdateTimeSelection();
         }
+    }
+    public void RaiseModules()
+    {
+        if (moduleAmount < maxModuleAmount)
+        {
+            moduleAmount += 1;
+            UpdateModuleSelection();
+        }
+    }
+    public void DecreaseModules()
+    {
+        if (moduleAmount > minModuleAmount)
+        {
+            moduleAmount -= 1;
+            UpdateModuleSelection();
+        }
+    }
+
+    void UpdateTimeSelection()
+    {
+        txtTime.text = Mathf.CeilToInt(timeLimit).ToString();
+    }
+    void UpdateModuleSelection()
+    {
+        txtModules.text = moduleAmount.ToString();
     }
     #endregion
 
     // for displaying timer
-    public int getTimerInSeconds()
+    public int GetTimerInSeconds()
     {
         return Mathf.CeilToInt(timer);
     }
