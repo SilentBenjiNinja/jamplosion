@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_ForceField_Shader
+  m_Name: ForceField_Material
   m_Shader: {fileID: -6465566751694194690, guid: 919f8d2ff617216448202eb78acbebb1, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 2
