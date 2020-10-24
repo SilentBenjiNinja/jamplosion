@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6215122515260811618}
   - component: {fileID: 6215122515260811623}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: ForceField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,3 +108,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f10b4cd2aef45a2439f73d417449626c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standardColor: {r: 542.3481, g: 139.1364, b: 0, a: 0}
+  alertColor: {r: 9.308417, g: 0, b: 0, a: 0}
