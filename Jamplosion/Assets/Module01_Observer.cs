@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Module01_Observer : MonoBehaviour
 {
-    [SerializeField] private Module01_Button[] buttons = new Module01_Button[16];
+    private Module01_Button[] buttons = new Module01_Button[16];
 
     [SerializeField] private Module01_PuzzlePresets puzzlePresets;
     
