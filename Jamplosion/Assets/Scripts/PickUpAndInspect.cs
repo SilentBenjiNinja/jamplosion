@@ -75,8 +75,6 @@ public class PickUpAndInspect : MonoBehaviour
 
     Transform tfCam;
 
-    bool isZooming = false;
-
     [SerializeField]
     public List<Vector2> moduleRotations;
 
