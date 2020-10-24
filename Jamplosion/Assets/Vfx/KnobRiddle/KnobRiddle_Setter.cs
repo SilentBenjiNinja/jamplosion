@@ -27,19 +27,16 @@ namespace Vfx.KnobRiddle
         private void Awake()
         {
             _renderer = GetComponent<MeshRenderer>();
+
+            SetInput1(knob1);
+            SetInput2(knob2);
+            SetInput3(knob3);
+            SetSpeed(speedValue);
         }
 
         public void SetInput1(float value) => _renderer.material.SetFloat(input1, value);
         public void SetInput2(float value) => _renderer.material.SetFloat(input2, value);
         public void SetInput3(float value) => _renderer.material.SetFloat(input3, value);
         public void SetSpeed(float value) => _renderer.material.SetFloat(speed, value);
-
-        private void Update()
-        {
-            SetInput1(knob1);
-            SetInput2(knob2);
-            SetInput3(knob3);
-            SetSpeed(speedValue);
-        }
     }
 }
