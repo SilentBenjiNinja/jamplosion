@@ -37,10 +37,13 @@ public class Module01_Button : MonoBehaviour
 
         ColorCheck();
 
-        foreach (var button in neighbors)
+        if (neighbors != null)
         {
-            button.isOn = !button.isOn;
-            button.ColorCheck();
+            foreach (var button in neighbors)
+            {
+                button.isOn = !button.isOn;
+                button.ColorCheck();
+            }
         }
 
         Color sensitiveEmission = rend.material.color + hoverColor;
