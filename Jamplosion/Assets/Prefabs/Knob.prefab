@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fbb230076eeb17419dec0a883d451fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceMod: 5
+  distanceMod: 50
   rotationSteps: 10
 --- !u!136 &4213067799886254426
 CapsuleCollider:

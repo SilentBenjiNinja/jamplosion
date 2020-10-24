@@ -1,33 +1,64 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Module02_KnobRotator : MonoBehaviour
 {
+    public Action<float> onValueChanged;
+    private Module02_Observer observer;
+
     private Vector2 startPos;
+    private int currentStep = 0;
+
+    private int randomizer;
+    public int realStep => (currentStep + randomizer) % rotationSteps;
+    public float shaderFactor => (float) realStep / (float) rotationSteps;
 
     [SerializeField] private float distanceMod = 5f;
-
     [SerializeField] private int rotationSteps = 10;
 
-    // Start is called before the first frame update
+    private int stepAtDragStart = 0;
+
+    private void Awake()
+    {
+        observer = GetComponentInParent<Module02_Observer>();
+        currentStep = Random.Range(0, rotationSteps);
+        randomizer = Random.Range(0, rotationSteps);
+    }
+
+    private void Start()
+    {
+        RotateKnob(currentStep);
+        onValueChanged?.Invoke(shaderFactor);
+    }
+
     private void OnMouseDown()
     {
         startPos = Input.mousePosition;
+        stepAtDragStart = currentStep;
     }
 
     private void OnMouseDrag()
     {
-        var delta = (Vector2)Input.mousePosition - startPos;
+        var delta = (Vector2) Input.mousePosition - startPos;
 
-        float deltaXY = Mathf.Clamp((delta.x + delta.y) / distanceMod, 0, rotationSteps);
+        float traveledDistance = (delta.x + delta.y) / distanceMod;
+        int step = Mathf.FloorToInt(traveledDistance);
+        step += stepAtDragStart;
+        step = Mathf.Clamp(step, 0, rotationSteps);
 
-        int steps = Mathf.FloorToInt(deltaXY); 
-        
-        RotateKnob(steps);
+        RotateKnob(step);
+
+        if (step != currentStep)
+        {
+            currentStep = step;
+            onValueChanged?.Invoke(shaderFactor);
+        }
     }
 
     void RotateKnob(int steps)
     {
         var degrees = 270 / rotationSteps * steps;
-        transform.localEulerAngles = new Vector3(degrees , 0, 0);
+        transform.localEulerAngles = new Vector3(degrees, 0, 0);
     }
 }
