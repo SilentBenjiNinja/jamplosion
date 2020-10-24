@@ -75,6 +75,8 @@ public class PickUpAndInspect : MonoBehaviour
 
     Transform tfCam;
 
+    bool isZooming = false;
+
     [SerializeField]
     public List<Vector2> moduleRotations;
 
@@ -105,12 +107,15 @@ public class PickUpAndInspect : MonoBehaviour
             tfCam.position = Vector3.Lerp(currentPos, targetPos, lerpSpeed);
             yield return new WaitForEndOfFrame();
         }
+        Debug.Log("fully zoomed out");
     }
 
     IEnumerator ZoomToTarget(int positionIndex)
     {
-        while (tfCam.position.z < lockCamZPos - lerpBias)
+        float lerpValue = 0;
+        while (lerpValue < 1 - lerpBias)
         {
+            lerpValue = Mathf.Lerp(lerpValue, 1, lerpSpeed);
             Vector3 targetPos = new Vector3(
                 tfCam.position.x,
                 tfCam.position.y,
@@ -129,6 +134,7 @@ public class PickUpAndInspect : MonoBehaviour
             
             yield return new WaitForEndOfFrame();
         }
+        Debug.Log("fully zoomed in");
     }
 
     void FetchTestInputs()
