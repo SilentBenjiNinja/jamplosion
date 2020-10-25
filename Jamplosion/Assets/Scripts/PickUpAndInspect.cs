@@ -49,6 +49,8 @@ public class PickUpAndInspect : MonoBehaviour
     }
     #endregion
 
+    public AudioManager am;
+
     private void Awake()
     {
         tfCam = Camera.main.transform;
@@ -110,6 +112,8 @@ public class PickUpAndInspect : MonoBehaviour
 
     IEnumerator ZoomToTarget(int positionIndex)
     {
+        am.moduleSelectionSwoosh.Play();
+
         float lerpValue = 0;
         while (lerpValue < 1 - lerpBias)
         {

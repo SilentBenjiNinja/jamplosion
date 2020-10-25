@@ -19,10 +19,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource menuSounds4;
 
     public AudioSource tickingNoiseLoop;
-    public AudioSource forceFieldLoop;
     public AudioSource moduleSelectionSwoosh;
-    public AudioSource moduleButtonClicks;
-    public AudioSource urgentAlarm;
+    //public AudioSource moduleButtonClicks;
+    //public AudioSource urgentAlarm;
 
     public AudioSource explosion;
     public AudioSource carAlarm1;
@@ -40,10 +39,9 @@ public class AudioManager : MonoBehaviour
         menuSounds4?.Stop();
 
         tickingNoiseLoop?.Stop();
-        forceFieldLoop?.Stop();
         moduleSelectionSwoosh?.Stop();
-        moduleButtonClicks?.Stop();
-        urgentAlarm?.Stop();
+        //moduleButtonClicks?.Stop();
+        //urgentAlarm?.Stop();
 
         explosion?.Stop();
         carAlarm1?.Stop();

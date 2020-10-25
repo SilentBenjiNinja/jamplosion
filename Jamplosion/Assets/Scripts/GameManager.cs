@@ -90,6 +90,8 @@ public class GameManager : MonoBehaviour
         // spawn modules
         SpawnModules();
         MyLockDispatcher.LockSomePuzzles();
+
+        am.tickingNoiseLoop.Play();
     }
 
     public void LoseGame()
@@ -121,6 +123,8 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
         startMenu.SetActive(true);
         difficulty.SetActive(false);
+
+        am.menuMusic.Play();
     }
 
     void SpawnModules()
