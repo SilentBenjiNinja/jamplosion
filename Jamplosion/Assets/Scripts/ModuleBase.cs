@@ -14,8 +14,8 @@ public class ModuleBase : MonoBehaviour
 
     protected void ModuleSolved()
     {
+	    locker.enabled = false;
         gameManager.FinishModule(slotIndex);
         camLock.UnlockRotation();
-        locker.enabled = false;
     }
 }

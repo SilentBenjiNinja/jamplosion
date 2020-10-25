@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vfx.ForceField;
 
 public class ModuleInputLocker : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class ModuleInputLocker : MonoBehaviour
 	{
 		if (s_moduleLockers.Contains(this))
 			s_moduleLockers.Remove(this);
+
+		forceField.GetComponent<ForceField_Setter>().isSolved = true;
+		forceField.gameObject.SetActive(true);
 
 		UnlockAModuleIfNoneAreUnlocked();
 	}

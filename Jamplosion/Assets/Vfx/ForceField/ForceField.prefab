@@ -110,3 +110,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standardColor: {r: 23.968628, g: 6.27451, b: 0, a: 0}
   alertColor: {r: 9.308417, g: 0, b: 0, a: 0}
+  solvedColor: {r: 1.4520878, g: 11.313708, b: 0, a: 0}
+  isSolved: 0
