@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,11 @@ public class DisplayTimer : MonoBehaviour
 {
     public GameManager gm;
 
-    Text txtTimer;
+    TextMeshProUGUI txtTimer;
 
     private void Awake()
     {
-        txtTimer = GetComponent<Text>();
+        txtTimer = GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
