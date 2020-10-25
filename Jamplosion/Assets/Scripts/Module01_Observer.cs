@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Module01_Observer : MonoBehaviour
+public class Module01_Observer : ModuleBase
 {
     private Module01_Button[] buttons = new Module01_Button[16];
 
     [SerializeField] private Module01_PuzzlePresets puzzlePresets;
+
     
     void Start()
     {
@@ -32,9 +33,8 @@ public class Module01_Observer : MonoBehaviour
     {
         if (!CheckSolved())
             return;
-        
-        //unlock next puzzle...
-        print("puzzle solved");
+
+        ModuleSolved();
     }
 
     private void InitializeArrays()

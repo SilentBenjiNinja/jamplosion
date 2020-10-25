@@ -36,7 +36,7 @@ namespace Vfx.ForceField
 
         void Update()
         {
-            _renderer.material.SetFloat(offset, 1f + 0.15f * Mathf.Sin(Time.time / 8f));
+            _renderer.material.SetFloat(offset, 1.2f + 0.15f * Mathf.Sin(Time.time / 8f));
         }
 
         private void OnMouseEnter() => SetAlertColor();

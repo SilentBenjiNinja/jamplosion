@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 public enum GameState
 {
@@ -44,6 +42,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] modules;
     [SerializeField] private Transform[] slots;
 
+    [SerializeField] private PickUpAndInspect pickUpAndInspect;
+
     bool gameRunning = false;
 
     public ParticleSystem deathVfx;
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         timer = timeLimit;
         gameRunning = true;
         currentState = GameState.InGame;
-        SwitchToCamera((int) currentState);
+        SwitchToCamera((int)currentState);
 
         modulesFinished = new bool[moduleAmount];
 
@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
 
         // spawn modules
         SpawnModules();
+        MyLockDispatcher.LockSomePuzzles();
     }
 
     public void LoseGame()
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("lose game");
         gameRunning = false;
         currentState = GameState.LoseScreen;
-        SwitchToCamera((int) currentState);
+        SwitchToCamera((int)currentState);
 
         // trigger explosion here
         StartCoroutine(DelayedExplosion());
@@ -108,7 +109,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("win game");
         gameRunning = false;
         currentState = GameState.WinScreen;
-        SwitchToCamera((int) currentState);
+        SwitchToCamera((int)currentState);
         // trigger win screen here
     }
 
@@ -117,7 +118,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("go to menu");
         gameRunning = false;
         currentState = GameState.StartMenu;
-        SwitchToCamera((int) currentState);
+        SwitchToCamera((int)currentState);
         startMenu.SetActive(true);
         difficulty.SetActive(false);
     }
@@ -137,7 +138,17 @@ public class GameManager : MonoBehaviour
             var slot = slots[i];
 
             // set the modules rotation to the slots rotation
-            Instantiate(module, slot);
+
+            GameObject tmp = Instantiate(module, slot);
+
+            var moduleBase = tmp.GetComponent<ModuleBase>();
+
+            if (null == moduleBase)
+                continue;
+
+            moduleBase.gameManager = this;
+            moduleBase.slotIndex = i;
+            moduleBase.camLock = pickUpAndInspect;
         }
     }
 
@@ -280,6 +291,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPaused = true;
         Debug.LogWarning("Pused the playmode | Application.Quit");
