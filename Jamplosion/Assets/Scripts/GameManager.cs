@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public bool[] modulesFinished;
 
     [SerializeField] private GameObject[] modules;
+    [SerializeField] private Transform[] slots;
 
     bool gameRunning = false;
 
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
         GoToMenu();
         deathVfx?.Pause();
         //modulesFinished = new bool[moduleAmount];
+        SpawnModules();
     }
 
     void Update()
@@ -76,7 +78,12 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
 
         modulesFinished = new bool[moduleAmount];
+
+        // despawn old modules
+        DespawnModules();
+
         // spawn modules
+        SpawnModules();
     }
 
     public void LoseGame()
@@ -115,8 +122,27 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < moduleAmount; i++)
         {
             // choose a random module
+            int randomModule = Random.Range(0, modules.Length);
+            var module = modules[randomModule];
+
             // choose a slot
+            var slot = slots[i];
+
             // set the modules rotation to the slots rotation
+            Instantiate(module, slot);
+        }
+    }
+
+    void DespawnModules()
+    {
+        print("despawn");
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].childCount == 0)
+                continue;
+            
+            var child = slots[i].GetChild(0).gameObject;
+            Destroy(child);
         }
     }
 
@@ -166,6 +192,7 @@ public class GameManager : MonoBehaviour
     {
         startMenu.SetActive(false);
         difficulty.SetActive(true);
+        UpdateModuleSelection();
     }
 
     public void RaiseTime()
@@ -212,6 +239,7 @@ public class GameManager : MonoBehaviour
     {
         txtTime.text = Mathf.CeilToInt(timeLimit).ToString();
     }
+
     void UpdateModuleSelection()
     {
         txtModules.text = moduleAmount.ToString();
@@ -226,7 +254,15 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPaused = true;
+        Debug.LogWarning("Pused the playmode | Application.Quit");
+#elif UNITY_WEBPLAYER
+         Application.OpenURL(webplayerQuitURL);
+#else
+         Application.Quit();
+#endif
+        //Application.Quit();
     }
 
     void FetchTestInputs()

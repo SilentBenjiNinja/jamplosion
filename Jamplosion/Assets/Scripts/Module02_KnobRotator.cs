@@ -12,7 +12,7 @@ public class Module02_KnobRotator : MonoBehaviour
 
     private int randomizer;
     public int realStep => (currentStep + randomizer) % rotationSteps;
-    public float shaderFactor => (float) realStep / (float) rotationSteps;
+    public float shaderFactor => (float)realStep / (float)rotationSteps;
 
     [SerializeField] private float distanceMod = 5f;
     [SerializeField] private int rotationSteps = 10;
@@ -40,7 +40,7 @@ public class Module02_KnobRotator : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        var delta = (Vector2) Input.mousePosition - startPos;
+        var delta = (Vector2)Input.mousePosition - startPos;
 
         float traveledDistance = (delta.x + delta.y) / distanceMod;
         int step = Mathf.FloorToInt(traveledDistance);
@@ -59,6 +59,7 @@ public class Module02_KnobRotator : MonoBehaviour
     void RotateKnob(int steps)
     {
         var degrees = 270 / rotationSteps * steps;
-        transform.localEulerAngles = new Vector3(degrees, 0, 0);
+        var rotation = new Vector3(degrees, 90, 0);
+        transform.localEulerAngles = rotation;
     }
 }
