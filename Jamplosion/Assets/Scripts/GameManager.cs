@@ -17,7 +17,7 @@ public enum GameState
 // initializes and starts game; X
 // handles difficulty settings; X
 // handles timer; X
-// navigation between menus;
+// navigation between menus; X
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     void SwitchToCamera(int camIndex)
     {
+        am.StopAllSounds();
         cameras[currentCam].enabled = false;
         cameras[camIndex].enabled = true;
         currentCam = camIndex;
@@ -46,13 +47,15 @@ public class GameManager : MonoBehaviour
     bool gameRunning = false;
 
     public ParticleSystem deathVfx;
+    public AudioManager am;
+    public CameraShake camShake;
 
     GameState currentState = GameState.StartMenu;
 
     private void Start()
     {
         GoToMenu();
-        deathVfx?.Pause();
+        deathVfx?.Stop();
         //modulesFinished = new bool[moduleAmount];
         SpawnModules();
     }
@@ -177,8 +180,26 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    // use these to adjust game settings (in menu?)
+    private IEnumerator DelayedExplosion()
+    {
+        am.sirens.Play();
 
+        yield return new WaitForSeconds(1);
+        deathVfx?.Play();
+
+        yield return new WaitForSeconds(0.5f);
+        am.explosion.Play();
+        StartCoroutine(camShake.Shake());
+
+        yield return new WaitForSeconds(0.5f);
+        am.carAlarm1.Play();
+        yield return new WaitForSeconds(0.1f);
+        am.carAlarm2.Play();
+        yield return new WaitForSeconds(0.05f);
+        am.carAlarm3.Play();
+    }
+
+    // use these to adjust game settings (in menu?)
     #region Game Settings
 
     public float timeLimit = 90f;
@@ -237,13 +258,6 @@ public class GameManager : MonoBehaviour
             moduleAmount -= 1;
             UpdateModuleSelection();
         }
-    }
-
-    private IEnumerator DelayedExplosion()
-    {
-        yield return new WaitForSeconds(1);
-
-        deathVfx?.Play();
     }
 
     void UpdateTimeSelection()
