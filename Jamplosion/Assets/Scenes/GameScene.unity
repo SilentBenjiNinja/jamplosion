@@ -1973,6 +1973,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1178966022}
     - target: {fileID: 2671318484245131225, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
+      propertyPath: pickUpAndInspect
+      value: 
+      objectReference: {fileID: 157492759}
+    - target: {fileID: 2671318484245131225, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
       propertyPath: startMenu
       value: 
       objectReference: {fileID: 79264413}
@@ -1983,15 +1987,11 @@ PrefabInstance:
     - target: {fileID: 2671318484245131225, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
       propertyPath: txtModules
       value: 
-      objectReference: {fileID: 1190509300}
+      objectReference: {fileID: 1222877774}
     - target: {fileID: 2671318484245131225, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
       propertyPath: txtTime
       value: 
       objectReference: {fileID: 1225179329}
-    - target: {fileID: 2671318484245131225, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
-      propertyPath: pickUpAndInspect
-      value: 
-      objectReference: {fileID: 157492759}
     - target: {fileID: 2671318484245131226, guid: f765dde1f2b13314bbd1df34f82f8657, type: 3}
       propertyPath: m_Name
       value: GameManager
