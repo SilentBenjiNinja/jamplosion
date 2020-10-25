@@ -85,7 +85,7 @@ public class PickUpAndInspect : MonoBehaviour
         StartCoroutine(ZoomToTarget(positionIndex));
     }
 
-    void UnlockRotation()
+    public void UnlockRotation()
     {
         isLocked = false;
 

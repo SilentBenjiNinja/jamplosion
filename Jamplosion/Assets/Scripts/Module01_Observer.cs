@@ -33,9 +33,8 @@ public class Module01_Observer : ModuleBase
     {
         if (!CheckSolved())
             return;
-        
-        //unlock next puzzle...
-        gameManager.FinishModule(slotIndex);
+
+        ModuleSolved();
     }
 
     private void InitializeArrays()

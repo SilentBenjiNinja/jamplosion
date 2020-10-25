@@ -49,7 +49,7 @@ MonoBehaviour:
   tfYaw: {fileID: 882734001850772911}
   isLocked: 0
   freeCamZPos: -5
-  lockCamZPos: -1
+  lockCamZPos: -1.1
   lerpSpeed: 0.1
   lerpBias: 0.001
   moduleRotations:

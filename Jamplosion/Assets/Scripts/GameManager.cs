@@ -38,10 +38,13 @@ public class GameManager : MonoBehaviour
 
     float timer;
 
+    [SerializeField] private GameObject[] modules;
+
     public bool[] modulesFinished;
 
-    [SerializeField] private GameObject[] modules;
     [SerializeField] private Transform[] slots;
+    
+    [SerializeField] private PickUpAndInspect pickUpAndInspect;
 
     bool gameRunning = false;
 
@@ -126,14 +129,10 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < moduleAmount; i++)
         {
-            // choose a random module
             int randomModule = Random.Range(0, modules.Length);
             var module = modules[randomModule];
-
-            // choose a slot
             var slot = slots[i];
 
-            // set the modules rotation to the slots rotation
             GameObject tmp = Instantiate(module, slot);
 
             var moduleBase = tmp.GetComponent<ModuleBase>();
@@ -143,6 +142,7 @@ public class GameManager : MonoBehaviour
 
             moduleBase.gameManager = this;
             moduleBase.slotIndex = i;
+            moduleBase.camLock = pickUpAndInspect;
         }
     }
 

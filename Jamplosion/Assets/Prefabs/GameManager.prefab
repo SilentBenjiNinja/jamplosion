@@ -58,7 +58,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  deathVfx: {fileID: 0}
+  deathVfx: {fileID: 198949247379185012, guid: f945c2e7bf066804eb93e7d79f7fb41b, type: 3}
   timeLimit: 90
   moduleAmount: 5
   maxTimeLimit: 240

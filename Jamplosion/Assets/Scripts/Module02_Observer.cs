@@ -80,7 +80,7 @@ public class Module02_Observer : ModuleBase
     {
         if (Solved())
         {
-            gameManager.FinishModule(slotIndex);
+            ModuleSolved();
         }
     }
 
