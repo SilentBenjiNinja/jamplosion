@@ -48,16 +48,17 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  modulesFinished: 
   modules:
   - {fileID: 1159511166993046543, guid: 634c1d0e108a93f4885a8ab4680a0250, type: 3}
   - {fileID: 4506394930260122912, guid: 91bdff34edf7ad44ea7173110274925b, type: 3}
+  modulesFinished: 
   slots:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  pickUpAndInspect: {fileID: 0}
   deathVfx: {fileID: 198949247379185012, guid: f945c2e7bf066804eb93e7d79f7fb41b, type: 3}
   timeLimit: 90
   moduleAmount: 5
