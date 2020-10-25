@@ -153,6 +153,14 @@ public class PickUpAndInspect : MonoBehaviour
         {
             LockRotation(3);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            LockRotation(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            LockRotation(5);
+        }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             UnlockRotation();
