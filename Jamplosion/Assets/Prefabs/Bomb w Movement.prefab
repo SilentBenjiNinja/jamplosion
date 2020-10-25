@@ -49,14 +49,16 @@ MonoBehaviour:
   tfYaw: {fileID: 882734001850772911}
   isLocked: 0
   freeCamZPos: -5
-  lockCamZPos: -1.1
+  lockCamZPos: -1.8
   lerpSpeed: 0.1
   lerpBias: 0.001
   moduleRotations:
   - {x: 0, y: 0}
   - {x: 0, y: 90}
   - {x: 0, y: 180}
+  - {x: 0, y: 270}
   - {x: 90, y: 270}
+  - {x: -90, y: 0}
 --- !u!1 &882734001850772896
 GameObject:
   m_ObjectHideFlags: 0

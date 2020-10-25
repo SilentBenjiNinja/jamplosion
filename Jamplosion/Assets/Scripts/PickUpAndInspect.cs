@@ -49,6 +49,8 @@ public class PickUpAndInspect : MonoBehaviour
     }
     #endregion
 
+    public AudioManager am;
+
     private void Awake()
     {
         tfCam = Camera.main.transform;
@@ -110,6 +112,8 @@ public class PickUpAndInspect : MonoBehaviour
 
     IEnumerator ZoomToTarget(int positionIndex)
     {
+        am.moduleSelectionSwoosh.Play();
+
         float lerpValue = 0;
         while (lerpValue < 1 - lerpBias)
         {
@@ -152,6 +156,14 @@ public class PickUpAndInspect : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             LockRotation(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            LockRotation(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            LockRotation(5);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
