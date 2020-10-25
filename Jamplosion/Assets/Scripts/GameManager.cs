@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 public enum GameState
 {
-    StartMenu,
-    InGame,
-    LoseScreen,
-    WinScreen
+	StartMenu,
+	InGame,
+	LoseScreen,
+	WinScreen
 }
 
 // handles win and lose condition; X
@@ -21,279 +19,289 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    #region Cameras
+	#region Cameras
 
-    public List<Camera> cameras;
+	public List<Camera> cameras;
 
-    int currentCam = 0;
+	int currentCam = 0;
 
-    void SwitchToCamera(int camIndex)
-    {
-        cameras[currentCam].enabled = false;
-        cameras[camIndex].enabled = true;
-        currentCam = camIndex;
-    }
+	void SwitchToCamera(int camIndex)
+	{
+		cameras[currentCam].enabled = false;
+		cameras[camIndex].enabled = true;
+		currentCam = camIndex;
+	}
 
-    #endregion
+	#endregion
 
-    float timer;
+	float timer;
 
-    public bool[] modulesFinished;
+	[SerializeField] private GameObject[] modules;
 
-    [SerializeField] private GameObject[] modules;
-    [SerializeField] private Transform[] slots;
+	public bool[] modulesFinished;
 
-    bool gameRunning = false;
+	[SerializeField] private Transform[] slots;
 
-    public ParticleSystem deathVfx;
+	[SerializeField] private PickUpAndInspect pickUpAndInspect;
 
-    GameState currentState = GameState.StartMenu;
+	bool gameRunning = false;
 
-    private void Start()
-    {
-        GoToMenu();
-        deathVfx?.Pause();
-        //modulesFinished = new bool[moduleAmount];
-        SpawnModules();
-    }
+	public ParticleSystem deathVfx;
 
-    void Update()
-    {
-        if (gameRunning)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                LoseGame();
-            }
-        }
+	GameState currentState = GameState.StartMenu;
 
-        FetchTestInputs();
-    }
+	private void Start()
+	{
+		GoToMenu();
+		deathVfx?.Pause();
+		//modulesFinished = new bool[moduleAmount];
+		SpawnModules();
+	}
 
-    public void StartGame()
-    {
-        Debug.Log("start game");
-        timer = timeLimit;
-        gameRunning = true;
-        currentState = GameState.InGame;
-        SwitchToCamera((int) currentState);
+	void Update()
+	{
+		if (gameRunning)
+		{
+			timer -= Time.deltaTime;
+			if (timer <= 0)
+			{
+				LoseGame();
+			}
+		}
 
-        modulesFinished = new bool[moduleAmount];
+		FetchTestInputs();
+	}
 
-        // despawn old modules
-        DespawnModules();
+	public void StartGame()
+	{
+		Debug.Log("start game");
+		timer = timeLimit;
+		gameRunning = true;
+		currentState = GameState.InGame;
+		SwitchToCamera((int)currentState);
 
-        // spawn modules
-        SpawnModules();
-    }
+		modulesFinished = new bool[moduleAmount];
 
-    public void LoseGame()
-    {
-        Debug.Log("lose game");
-        gameRunning = false;
-        currentState = GameState.LoseScreen;
-        SwitchToCamera((int) currentState);
+		// despawn old modules
+		DespawnModules();
 
-        // trigger explosion here
-        StartCoroutine(DelayedExplosion());
-        //deathVfx?.Play();
-    }
+		// spawn modules
+		SpawnModules();
 
-    void WinGame()
-    {
-        Debug.Log("win game");
-        gameRunning = false;
-        currentState = GameState.WinScreen;
-        SwitchToCamera((int) currentState);
-        // trigger win screen here
-    }
+		MyLockDispatcher.LockSomePuzzles();
+	}
 
-    public void GoToMenu()
-    {
-        Debug.Log("go to menu");
-        gameRunning = false;
-        currentState = GameState.StartMenu;
-        SwitchToCamera((int) currentState);
-        startMenu.SetActive(true);
-        difficulty.SetActive(false);
-    }
+	public void LoseGame()
+	{
+		Debug.Log("lose game");
+		gameRunning = false;
+		currentState = GameState.LoseScreen;
+		SwitchToCamera((int)currentState);
 
-    void SpawnModules()
-    {
-        if (null == modules || modules.Length < 1)
-            return;
+		// trigger explosion here
+		StartCoroutine(DelayedExplosion());
+		//deathVfx?.Play();
+	}
 
-        for (int i = 0; i < moduleAmount; i++)
-        {
-            // choose a random module
-            int randomModule = Random.Range(0, modules.Length);
-            var module = modules[randomModule];
+	void WinGame()
+	{
+		Debug.Log("win game");
+		gameRunning = false;
+		currentState = GameState.WinScreen;
+		SwitchToCamera((int)currentState);
+		// trigger win screen here
+	}
 
-            // choose a slot
-            var slot = slots[i];
+	public void GoToMenu()
+	{
+		Debug.Log("go to menu");
+		gameRunning = false;
+		currentState = GameState.StartMenu;
+		SwitchToCamera((int)currentState);
+		startMenu.SetActive(true);
+		difficulty.SetActive(false);
+	}
 
-            // set the modules rotation to the slots rotation
-            Instantiate(module, slot);
-        }
-    }
+	void SpawnModules()
+	{
+		if (null == modules || modules.Length < 1)
+			return;
 
-    void DespawnModules()
-    {
-        print("despawn");
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (slots[i].childCount == 0)
-                continue;
+		for (int i = 0; i < moduleAmount; i++)
+		{
+			int randomModule = Random.Range(0, modules.Length);
+			var module = modules[randomModule];
+			var slot = slots[i];
 
-            var child = slots[i].GetChild(0).gameObject;
-            Destroy(child);
-        }
-    }
+			GameObject tmp = Instantiate(module, slot);
 
-    // called from module
-    public void FinishModule(int moduleIndex)
-    {
-        if (modulesFinished[moduleIndex] == false)
-        {
-            modulesFinished[moduleIndex] = true;
-            if (CheckWinCondition())
-            {
-                WinGame();
-            }
-        }
-    }
+			var moduleBase = tmp.GetComponent<ModuleBase>();
 
-    bool CheckWinCondition()
-    {
-        for (int i = 0; i < moduleAmount; i++)
-        {
-            if (modulesFinished[i] == false)
-            {
-                return false;
-            }
-        }
+			if (null == moduleBase)
+				continue;
 
-        return true;
-    }
+			moduleBase.gameManager = this;
+			moduleBase.slotIndex = i;
+			moduleBase.camLock = pickUpAndInspect;
+		}
+	}
 
-    // use these to adjust game settings (in menu?)
+	void DespawnModules()
+	{
+		print("despawn");
+		for (int i = 0; i < slots.Length; i++)
+		{
+			if (slots[i].childCount == 0)
+				continue;
 
-    #region Game Settings
+			var child = slots[i].GetChild(0).gameObject;
+			Destroy(child);
+		}
+	}
 
-    public float timeLimit = 90f;
-    public int moduleAmount = 4;
+	// called from module
+	public void FinishModule(int moduleIndex)
+	{
+		if (modulesFinished[moduleIndex] == false)
+		{
+			modulesFinished[moduleIndex] = true;
+			if (CheckWinCondition())
+			{
+				WinGame();
+			}
+		}
+	}
 
-    public float maxTimeLimit = 240f;
-    public float minTimeLimit = 15f;
+	bool CheckWinCondition()
+	{
+		for (int i = 0; i < moduleAmount; i++)
+		{
+			if (modulesFinished[i] == false)
+			{
+				return false;
+			}
+		}
 
-    public int maxModuleAmount = 8;
-    public int minModuleAmount = 1;
+		return true;
+	}
 
-    public GameObject startMenu;
-    public GameObject difficulty;
+	// use these to adjust game settings (in menu?)
 
-    public TextMeshProUGUI txtModules;
-    public TextMeshProUGUI txtTime;
+	#region Game Settings
 
-    public void SelectDifficulty()
-    {
-        startMenu.SetActive(false);
-        difficulty.SetActive(true);
-        UpdateModuleSelection();
-    }
+	public float timeLimit = 90f;
+	public int moduleAmount = 5;
 
-    public void RaiseTime()
-    {
-        if (timeLimit < maxTimeLimit)
-        {
-            timeLimit += 5f;
-            UpdateTimeSelection();
-        }
-    }
+	public float maxTimeLimit = 240f;
+	public float minTimeLimit = 15f;
 
-    public void DecreaseTime()
-    {
-        if (timeLimit > minTimeLimit)
-        {
-            timeLimit -= 5f;
-            UpdateTimeSelection();
-        }
-    }
+	public int maxModuleAmount = 8;
+	public int minModuleAmount = 1;
 
-    public void RaiseModules()
-    {
-        if (moduleAmount < maxModuleAmount)
-        {
-            moduleAmount += 1;
-            UpdateModuleSelection();
-        }
-    }
+	public GameObject startMenu;
+	public GameObject difficulty;
 
-    public void DecreaseModules()
-    {
-        if (moduleAmount > minModuleAmount)
-        {
-            moduleAmount -= 1;
-            UpdateModuleSelection();
-        }
-    }
+	public TextMeshProUGUI txtModules;
+	public TextMeshProUGUI txtTime;
 
-    private IEnumerator DelayedExplosion()
-    {
-        yield return new WaitForSeconds(1);
+	public void SelectDifficulty()
+	{
+		startMenu.SetActive(false);
+		difficulty.SetActive(true);
+		UpdateModuleSelection();
+	}
 
-        deathVfx?.Play();
-    }
+	public void RaiseTime()
+	{
+		if (timeLimit < maxTimeLimit)
+		{
+			timeLimit += 5f;
+			UpdateTimeSelection();
+		}
+	}
 
-    void UpdateTimeSelection()
-    {
-        txtTime.text = Mathf.CeilToInt(timeLimit).ToString();
-    }
+	public void DecreaseTime()
+	{
+		if (timeLimit > minTimeLimit)
+		{
+			timeLimit -= 5f;
+			UpdateTimeSelection();
+		}
+	}
 
-    void UpdateModuleSelection()
-    {
-        txtModules.text = moduleAmount.ToString();
-    }
+	public void RaiseModules()
+	{
+		if (moduleAmount < maxModuleAmount)
+		{
+			moduleAmount += 1;
+			UpdateModuleSelection();
+		}
+	}
 
-    #endregion
+	public void DecreaseModules()
+	{
+		if (moduleAmount > minModuleAmount)
+		{
+			moduleAmount -= 1;
+			UpdateModuleSelection();
+		}
+	}
 
-    // for displaying timer
-    public int GetTimerInSeconds()
-    {
-        return Mathf.CeilToInt(timer);
-    }
+	private IEnumerator DelayedExplosion()
+	{
+		yield return new WaitForSeconds(1);
 
-    public void QuitGame()
-    {
+		deathVfx?.Play();
+	}
+
+	void UpdateTimeSelection()
+	{
+		txtTime.text = Mathf.CeilToInt(timeLimit).ToString();
+	}
+
+	void UpdateModuleSelection()
+	{
+		txtModules.text = moduleAmount.ToString();
+	}
+
+	#endregion
+
+	// for displaying timer
+	public int GetTimerInSeconds()
+	{
+		return Mathf.CeilToInt(timer);
+	}
+
+	public void QuitGame()
+	{
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPaused = true;
-        Debug.LogWarning("Pused the playmode | Application.Quit");
+		UnityEditor.EditorApplication.isPaused = true;
+		Debug.LogWarning("Pused the playmode | Application.Quit");
 #elif UNITY_WEBPLAYER
          Application.OpenURL(webplayerQuitURL);
 #else
          Application.Quit();
 #endif
-        //Application.Quit();
-    }
+		//Application.Quit();
+	}
 
-    void FetchTestInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            GoToMenu();
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            StartGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            LoseGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.F))
-        {
-            WinGame();
-        }
-    }
+	void FetchTestInputs()
+	{
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			GoToMenu();
+		}
+		else if (Input.GetKeyDown(KeyCode.S))
+		{
+			StartGame();
+		}
+		else if (Input.GetKeyDown(KeyCode.D))
+		{
+			LoseGame();
+		}
+		else if (Input.GetKeyDown(KeyCode.F))
+		{
+			WinGame();
+		}
+	}
 }

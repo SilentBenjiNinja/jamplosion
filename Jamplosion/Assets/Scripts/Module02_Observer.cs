@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vfx.KnobRiddle;
 
-public class Module02_Observer : MonoBehaviour
+public class Module02_Observer : ModuleBase
 {
     private KnobRiddle_Setter shader;
 
@@ -80,7 +80,7 @@ public class Module02_Observer : MonoBehaviour
     {
         if (Solved())
         {
-            Debug.Log("Thing is solved");
+            ModuleSolved();
         }
     }
 

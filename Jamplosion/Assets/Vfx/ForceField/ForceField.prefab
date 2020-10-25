@@ -108,5 +108,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f10b4cd2aef45a2439f73d417449626c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  standardColor: {r: 542.3481, g: 139.1364, b: 0, a: 0}
+  standardColor: {r: 23.968628, g: 6.27451, b: 0, a: 0}
   alertColor: {r: 9.308417, g: 0, b: 0, a: 0}
