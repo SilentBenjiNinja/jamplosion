@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private PickUpAndInspect pickUpAndInspect;
 
+    public DisappearAfterThreeSecs dis;
+
     bool gameRunning = false;
 
     public ParticleSystem deathVfx;
@@ -112,6 +114,7 @@ public class GameManager : MonoBehaviour
         gameRunning = false;
         currentState = GameState.WinScreen;
         SwitchToCamera((int)currentState);
+        dis.WinScreen();
         // trigger win screen here
     }
 
