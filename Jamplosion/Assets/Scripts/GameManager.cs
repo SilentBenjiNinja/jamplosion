@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour
     #region Game Settings
 
     public float timeLimit = 90f;
-    public int moduleAmount = 4;
+    public int moduleAmount = 5;
 
     public float maxTimeLimit = 240f;
     public float minTimeLimit = 15f;
