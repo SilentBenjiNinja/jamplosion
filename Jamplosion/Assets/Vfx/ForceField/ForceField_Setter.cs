@@ -28,7 +28,18 @@ namespace Vfx.ForceField
 		private string scrollPower = "Vector1_4D3EB88F";
 		private string pattern = "Texture2D_7E12B800";
 
-		private MeshRenderer _renderer;
+		private MeshRenderer _rendererBackingField;
+
+		private MeshRenderer _renderer
+		{
+			get
+			{
+				if (null == _rendererBackingField)
+					_rendererBackingField = GetComponent<MeshRenderer>();
+				return _rendererBackingField;
+			}
+			set => _rendererBackingField = value;
+		}
 
 		[HideInInspector] public bool isSolved = false;
 
