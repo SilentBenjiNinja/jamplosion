@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public enum GameState
@@ -16,10 +17,12 @@ public enum GameState
 // initializes and starts game; X
 // handles difficulty settings; X
 // handles timer; X
-// navigation between menus; 
+// navigation between menus;
+
 public class GameManager : MonoBehaviour
 {
     #region Cameras
+
     public List<Camera> cameras;
 
     int currentCam = 0;
@@ -30,11 +33,15 @@ public class GameManager : MonoBehaviour
         cameras[camIndex].enabled = true;
         currentCam = camIndex;
     }
+
     #endregion
 
     float timer;
 
     public bool[] modulesFinished;
+
+    [SerializeField] private GameObject[] modules;
+    [SerializeField] private Transform[] slots;
 
     bool gameRunning = false;
 
@@ -45,6 +52,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GoToMenu();
+        deathVfx?.Pause();
+        //modulesFinished = new bool[moduleAmount];
+        SpawnModules();
     }
 
     void Update()
@@ -67,36 +77,78 @@ public class GameManager : MonoBehaviour
         timer = timeLimit;
         gameRunning = true;
         currentState = GameState.InGame;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
 
         modulesFinished = new bool[moduleAmount];
+
+        // despawn old modules
+        DespawnModules();
+
+        // spawn modules
+        SpawnModules();
     }
 
-    void LoseGame()
+    public void LoseGame()
     {
         Debug.Log("lose game");
         gameRunning = false;
         currentState = GameState.LoseScreen;
-        SwitchToCamera((int)currentState);
-        deathVfx?.Play();
+        SwitchToCamera((int) currentState);
+
         // trigger explosion here
+        StartCoroutine(DelayedExplosion());
+        //deathVfx?.Play();
     }
+
     void WinGame()
     {
         Debug.Log("win game");
         gameRunning = false;
         currentState = GameState.WinScreen;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
         // trigger win screen here
     }
+
     public void GoToMenu()
     {
         Debug.Log("go to menu");
         gameRunning = false;
         currentState = GameState.StartMenu;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
         startMenu.SetActive(true);
         difficulty.SetActive(false);
+    }
+
+    void SpawnModules()
+    {
+        if (null == modules || modules.Length < 1)
+            return;
+
+        for (int i = 0; i < moduleAmount; i++)
+        {
+            // choose a random module
+            int randomModule = Random.Range(0, modules.Length);
+            var module = modules[randomModule];
+
+            // choose a slot
+            var slot = slots[i];
+
+            // set the modules rotation to the slots rotation
+            Instantiate(module, slot);
+        }
+    }
+
+    void DespawnModules()
+    {
+        print("despawn");
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].childCount == 0)
+                continue;
+
+            var child = slots[i].GetChild(0).gameObject;
+            Destroy(child);
+        }
     }
 
     // called from module
@@ -121,11 +173,14 @@ public class GameManager : MonoBehaviour
                 return false;
             }
         }
+
         return true;
     }
 
     // use these to adjust game settings (in menu?)
+
     #region Game Settings
+
     public float timeLimit = 90f;
     public int moduleAmount = 4;
 
@@ -145,6 +200,7 @@ public class GameManager : MonoBehaviour
     {
         startMenu.SetActive(false);
         difficulty.SetActive(true);
+        UpdateModuleSelection();
     }
 
     public void RaiseTime()
@@ -155,6 +211,7 @@ public class GameManager : MonoBehaviour
             UpdateTimeSelection();
         }
     }
+
     public void DecreaseTime()
     {
         if (timeLimit > minTimeLimit)
@@ -163,6 +220,7 @@ public class GameManager : MonoBehaviour
             UpdateTimeSelection();
         }
     }
+
     public void RaiseModules()
     {
         if (moduleAmount < maxModuleAmount)
@@ -171,6 +229,7 @@ public class GameManager : MonoBehaviour
             UpdateModuleSelection();
         }
     }
+
     public void DecreaseModules()
     {
         if (moduleAmount > minModuleAmount)
@@ -180,14 +239,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator DelayedExplosion()
+    {
+        yield return new WaitForSeconds(1);
+
+        deathVfx?.Play();
+    }
+
     void UpdateTimeSelection()
     {
         txtTime.text = Mathf.CeilToInt(timeLimit).ToString();
     }
+
     void UpdateModuleSelection()
     {
         txtModules.text = moduleAmount.ToString();
     }
+
     #endregion
 
     // for displaying timer
@@ -198,7 +266,15 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPaused = true;
+        Debug.LogWarning("Pused the playmode | Application.Quit");
+#elif UNITY_WEBPLAYER
+         Application.OpenURL(webplayerQuitURL);
+#else
+         Application.Quit();
+#endif
+        //Application.Quit();
     }
 
     void FetchTestInputs()
