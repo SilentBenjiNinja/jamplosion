@@ -31,8 +31,14 @@ public class ModuleInputLocker : MonoBehaviour
 		if (s_moduleLockers.Contains(this))
 			s_moduleLockers.Remove(this);
 
-		forceField.GetComponent<ForceField_Setter>().isSolved = true;
-		forceField.gameObject.SetActive(true);
+		var setter = forceField?.GetComponent<ForceField_Setter>();
+		if (null != setter)
+		{
+			setter.isSolved = true;
+			setter.SetSolvedColor();
+		}
+
+		IsLocked = true;
 
 		UnlockAModuleIfNoneAreUnlocked();
 	}

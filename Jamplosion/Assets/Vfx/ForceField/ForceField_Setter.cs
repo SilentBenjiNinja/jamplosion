@@ -60,6 +60,6 @@ namespace Vfx.ForceField
 		private void SetStandardColor() => _renderer.material.SetColor(emission, standardColor);
 
 		private void SetAlertColor() => _renderer.material.SetColor(emission, alertColor);
-		private void SetSolvedColor() => _renderer.material.SetColor(emission, solvedColor);
+		public void SetSolvedColor() => _renderer.material.SetColor(emission, solvedColor);
 	}
 }
