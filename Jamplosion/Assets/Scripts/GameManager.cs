@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
 
     public bool[] modulesFinished;
 
+    [SerializeField] private GameObject[] modules;
+
     bool gameRunning = false;
 
     public ParticleSystem deathVfx;
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
 
         modulesFinished = new bool[moduleAmount];
+        // spawn modules
     }
 
     public void LoseGame()
@@ -84,10 +87,9 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
 
         // trigger explosion here
-        //DelayedExplosion();
-        deathVfx?.Play();
+        StartCoroutine(DelayedExplosion());
+        //deathVfx?.Play();
     }
-
 
     void WinGame()
     {
@@ -106,6 +108,16 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
         startMenu.SetActive(true);
         difficulty.SetActive(false);
+    }
+
+    void SpawnModules()
+    {
+        for (int i = 0; i < moduleAmount; i++)
+        {
+            // choose a random module
+            // choose a slot
+            // set the modules rotation to the slots rotation
+        }
     }
 
     // called from module
@@ -189,18 +201,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //private IEnumerator DelayedExplosion()
-    //{
-    //    while (true)
-    //    {
-    //
-    //        print("here1");
-    //        yield return new WaitForSeconds(2);
-    //        print("here2");
-    //
-    //        deathVfx?.Play();
-    //    }
-    //}
+    private IEnumerator DelayedExplosion()
+    {
+        yield return new WaitForSeconds(1);
+
+        deathVfx?.Play();
+    }
 
     void UpdateTimeSelection()
     {
