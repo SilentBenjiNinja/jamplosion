@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public enum GameState
@@ -16,7 +17,8 @@ public enum GameState
 // initializes and starts game; X
 // handles difficulty settings; X
 // handles timer; X
-// navigation between menus; 
+// navigation between menus;
+
 public class GameManager : MonoBehaviour
 {
     #region Cameras
@@ -45,6 +47,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GoToMenu();
+        deathVfx?.Pause();
+        //modulesFinished = new bool[moduleAmount];
     }
 
     void Update()
@@ -72,15 +76,19 @@ public class GameManager : MonoBehaviour
         modulesFinished = new bool[moduleAmount];
     }
 
-    void LoseGame()
+    public void LoseGame()
     {
         Debug.Log("lose game");
         gameRunning = false;
         currentState = GameState.LoseScreen;
         SwitchToCamera((int)currentState);
-        deathVfx?.Play();
+
         // trigger explosion here
+        //DelayedExplosion();
+        deathVfx?.Play();
     }
+
+
     void WinGame()
     {
         Debug.Log("win game");
@@ -89,6 +97,7 @@ public class GameManager : MonoBehaviour
         SwitchToCamera((int)currentState);
         // trigger win screen here
     }
+
     public void GoToMenu()
     {
         Debug.Log("go to menu");
@@ -179,6 +188,19 @@ public class GameManager : MonoBehaviour
             UpdateModuleSelection();
         }
     }
+
+    //private IEnumerator DelayedExplosion()
+    //{
+    //    while (true)
+    //    {
+    //
+    //        print("here1");
+    //        yield return new WaitForSeconds(2);
+    //        print("here2");
+    //
+    //        deathVfx?.Play();
+    //    }
+    //}
 
     void UpdateTimeSelection()
     {
