@@ -22,6 +22,7 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     #region Cameras
+
     public List<Camera> cameras;
 
     int currentCam = 0;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
         cameras[camIndex].enabled = true;
         currentCam = camIndex;
     }
+
     #endregion
 
     float timer;
@@ -75,7 +77,7 @@ public class GameManager : MonoBehaviour
         timer = timeLimit;
         gameRunning = true;
         currentState = GameState.InGame;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
 
         modulesFinished = new bool[moduleAmount];
 
@@ -91,7 +93,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("lose game");
         gameRunning = false;
         currentState = GameState.LoseScreen;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
 
         // trigger explosion here
         StartCoroutine(DelayedExplosion());
@@ -103,7 +105,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("win game");
         gameRunning = false;
         currentState = GameState.WinScreen;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
         // trigger win screen here
     }
 
@@ -112,13 +114,16 @@ public class GameManager : MonoBehaviour
         Debug.Log("go to menu");
         gameRunning = false;
         currentState = GameState.StartMenu;
-        SwitchToCamera((int)currentState);
+        SwitchToCamera((int) currentState);
         startMenu.SetActive(true);
         difficulty.SetActive(false);
     }
 
     void SpawnModules()
     {
+        if (null == modules || modules.Length < 1)
+            return;
+
         for (int i = 0; i < moduleAmount; i++)
         {
             // choose a random module
@@ -140,7 +145,7 @@ public class GameManager : MonoBehaviour
         {
             if (slots[i].childCount == 0)
                 continue;
-            
+
             var child = slots[i].GetChild(0).gameObject;
             Destroy(child);
         }
@@ -168,11 +173,14 @@ public class GameManager : MonoBehaviour
                 return false;
             }
         }
+
         return true;
     }
 
     // use these to adjust game settings (in menu?)
+
     #region Game Settings
+
     public float timeLimit = 90f;
     public int moduleAmount = 4;
 
@@ -203,6 +211,7 @@ public class GameManager : MonoBehaviour
             UpdateTimeSelection();
         }
     }
+
     public void DecreaseTime()
     {
         if (timeLimit > minTimeLimit)
@@ -211,6 +220,7 @@ public class GameManager : MonoBehaviour
             UpdateTimeSelection();
         }
     }
+
     public void RaiseModules()
     {
         if (moduleAmount < maxModuleAmount)
@@ -219,6 +229,7 @@ public class GameManager : MonoBehaviour
             UpdateModuleSelection();
         }
     }
+
     public void DecreaseModules()
     {
         if (moduleAmount > minModuleAmount)
@@ -244,6 +255,7 @@ public class GameManager : MonoBehaviour
     {
         txtModules.text = moduleAmount.ToString();
     }
+
     #endregion
 
     // for displaying timer
